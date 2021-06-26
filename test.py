@@ -42,7 +42,7 @@ net = Net()
 net.load_state_dict(torch.load("./expression.pth"))
 net.eval()
 
-im = load_image('./individual_test/sad.jpg')
+im = load_image('./individual_test/anger_3.jpg')
 outputs = net(im)
 b = outputs.data
 pred = torch.argmax(outputs, 1)
