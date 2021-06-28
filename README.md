@@ -10,7 +10,7 @@ To train the model, adjust the settings for the training in main.py, and run the
 
 To test the model, go to the file test.py, and insert the path to any full color image into the correct location in the file:
 
-'''
+```
 im = load_image('./individual_test/your-file-name.extension')
-'''
+```
 
