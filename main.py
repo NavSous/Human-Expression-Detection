@@ -8,11 +8,15 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import numpy as np
 
+#Create the function to display images
+
 def imshow(img):
     img = img / 2 + 0.5
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
     plt.show()
+    
+#Create the function to transform images into tensors for training
 
 transform = transforms.Compose(
     [transforms.ToTensor(),
@@ -27,15 +31,11 @@ batch_size = 4
 data_transforms = {
     'train':
         transforms.Compose([
-            #transforms.Resize((224,224)),
-            #transforms.RandomAffine(0, shear=10, scale=(0.8,1.2)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]),
     'validation':
         transforms.Compose([
-            #transforms.Resize((224,224)),
-            #transforms.RandomAffine(0, shear=10, scale=(0.8,1.2)),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
@@ -62,7 +62,6 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(84, 10)
 
     def forward(self, x):
-        #PROBLEMO IS HERE?
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = torch.flatten(x, 1) 
@@ -74,22 +73,20 @@ class Net(nn.Module):
 
 
 
-#Train network
+#Train the network
 
 net = Net()
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-for epoch in range(50):  # loop over the dataset multiple times
+for epoch in range(50):  # Change this value to adjust the amount of times the network loops over the data in training
 
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
         
         inputs, labels = data
         
-        #print(type(inputs))
-        #print(labels.size(), inputs.size())
         optimizer.zero_grad()
 
         
@@ -97,7 +94,9 @@ for epoch in range(50):  # loop over the dataset multiple times
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
-
+        
+        #Print training information every multiple of 2000 times
+        
         running_loss += loss.item()
         if i % 2000 == 1999:
             print('[%d, %5d] loss: %.3f' %
